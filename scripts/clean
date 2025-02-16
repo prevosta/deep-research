@@ -1,0 +1,5 @@
+#!/bin/bash
+cd $(dirname $(dirname $0))
+
+[ "$1" == "--show" ] && SHOW=n || SHOW=
+git clean -${SHOW}fdx -e .venv/

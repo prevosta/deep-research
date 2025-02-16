@@ -1,0 +1,21 @@
+#!/bin/bash
+cd $(dirname $(dirname $0))
+
+# docker pull unclecode/crawl4ai:basic-amd64
+# docker run -p 11235:11235 unclecode/crawl4ai:basic-amd64
+
+
+if [ ! -d ".venv" ] || ! cmp -s pyproject.toml .venv/pyproject.hash; then
+    rm -rf .venv
+    python -m venv .venv
+
+    .venv/bin/pip install --upgrade pip setuptools wheel pre-commit pytest ruff
+    .venv/bin/pip install -e .
+
+    cp pyproject.toml .venv/pyproject.hash
+fi
+
+if ! cmp -s .pre-commit-config.yaml .venv/.pre-commit-config.hash; then
+    .venv/bin/pre-commit install
+    cp .pre-commit-config.yaml .venv/.pre-commit-config.hash
+fi
